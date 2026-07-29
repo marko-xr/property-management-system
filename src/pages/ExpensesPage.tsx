@@ -13,7 +13,7 @@ interface ExpensesPageProps {
   onAddExpense: (expense: Omit<Expense, 'id'>) => void;
   onUpdateExpense: (expense: Expense) => void;
   onDeleteExpense: (id: string) => void;
-  onPrint: () => void;
+  onPrint: (selector: string) => void;
 }
 
 export const ExpensesPage: React.FC<ExpensesPageProps> = ({
@@ -193,7 +193,7 @@ export const ExpensesPage: React.FC<ExpensesPageProps> = ({
       await document.fonts.ready;
     }
 
-    onPrint();
+    onPrint('.expense-print-report');
   };
 
   return (

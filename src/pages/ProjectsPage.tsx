@@ -7,6 +7,7 @@ import { PrintHeader } from '../components/PrintHeader';
 import { ActionMenu } from '../components/ActionMenu';
 import { ProjectPrintTemplate } from '../components/ProjectPrintTemplate';
 import { ReportPreviewModal } from '../components/ReportPreviewModal';
+import { ProjectsRegisterPrintTemplate } from '../components/ProjectRegisterPrintTemplates';
 import { formatCreationDateTime, formatCompletionDateTime } from '../utils/dateUtils';
 
 interface ProjectsPageProps {
@@ -15,7 +16,7 @@ interface ProjectsPageProps {
   onAddProject: (project: Omit<Project, 'id'>) => void;
   onUpdateProject: (project: Project) => void;
   onDeleteProject: (id: string) => void;
-  onPrint: () => void;
+  onPrint: (selector: string) => void;
 }
 
 export const ProjectsPage: React.FC<ProjectsPageProps> = ({
@@ -257,7 +258,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
             )}
 
             <button
-              onClick={onPrint}
+              onClick={() => onPrint('.projects-register-print-report')}
               className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-xs transition-colors border border-slate-300"
             >
               <Printer className="w-4 h-4" />
@@ -629,7 +630,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
                 </button>
 
                 <button
-                  onClick={() => window.print()}
+                  onClick={() => onPrint('.project-quick-print-report')}
                   className="flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-amber-400 font-bold rounded-lg text-xs cursor-pointer shadow-sm transition-colors"
                 >
                   <Printer className="w-4 h-4" />
@@ -659,10 +660,22 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
       )}
 
       {/* Dedicated Single Ongoing Project Professional Printable Report Document */}
+      <ProjectsRegisterPrintTemplate
+        projects={filteredProjects}
+        settings={settings}
+        filters={[
+          ...(searchTerm.trim() ? [{ label: 'البحث', value: searchTerm.trim() }] : []),
+          ...(startDate ? [{ label: 'من تاريخ', value: startDate }] : []),
+          ...(endDate ? [{ label: 'إلى تاريخ', value: endDate }] : []),
+          ...(minPrice !== '' ? [{ label: 'الحد الأدنى للقيمة', value: String(minPrice) }] : []),
+          ...(maxPrice !== '' ? [{ label: 'الحد الأعلى للقيمة', value: String(maxPrice) }] : []),
+        ]}
+      />
       {viewingProject && (
         <ProjectPrintTemplate
           project={viewingProject}
           settings={settings}
+          printClassName="project-quick-print-report"
         />
       )}
 

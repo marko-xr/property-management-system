@@ -13,7 +13,7 @@ interface RevenuesPageProps {
   onAddRevenue: (revenue: Omit<Revenue, 'id'>) => void;
   onUpdateRevenue: (revenue: Revenue) => void;
   onDeleteRevenue: (id: string) => void;
-  onPrint: () => void;
+  onPrint: (selector: string) => void;
 }
 
 export const RevenuesPage: React.FC<RevenuesPageProps> = ({
@@ -183,7 +183,7 @@ export const RevenuesPage: React.FC<RevenuesPageProps> = ({
         {/* Buttons */}
         <div className="flex items-center gap-2">
           <button
-            onClick={onPrint}
+            onClick={() => onPrint('.revenue-print-wrapper')}
             className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-colors border border-slate-300"
           >
             <Printer className="w-4 h-4" />

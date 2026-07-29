@@ -13,7 +13,7 @@ interface ObligationsPageProps {
   onAddObligation: (obligation: Omit<Obligation, 'id'>) => void;
   onUpdateObligation: (obligation: Obligation) => void;
   onDeleteObligation: (id: string) => void;
-  onPrint: () => void;
+  onPrint: (selector: string) => void;
 }
 
 export const ObligationsPage: React.FC<ObligationsPageProps> = ({
@@ -237,7 +237,7 @@ export const ObligationsPage: React.FC<ObligationsPageProps> = ({
 
         <div className="flex items-center gap-2">
           <button
-            onClick={onPrint}
+            onClick={() => onPrint('.obligation-print-wrapper')}
             className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-colors border border-slate-300"
           >
             <Printer className="w-4 h-4" />

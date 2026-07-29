@@ -15,6 +15,7 @@ import { ProjectsPage } from './pages/ProjectsPage';
 import { ExecutedProjectsPage } from './pages/ExecutedProjectsPage';
 import { ObligationsPage } from './pages/ObligationsPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { printTarget } from './utils/printUtils';
 
 export default function App() {
   const [appState, setAppState] = useState<AppState>(() => loadAppState());
@@ -61,24 +62,7 @@ export default function App() {
   };
 
   // Printing helper
-  const handlePrint = async () => {
-    if (document.fonts?.ready) {
-      await document.fonts.ready;
-    }
-
-    const printLogos = Array.from(
-      document.querySelectorAll<HTMLImageElement>('.professional-print-report .print-letterhead-logo img')
-    );
-    await Promise.all(printLogos.map(image => {
-      if (image.complete) return Promise.resolve();
-      return new Promise<void>(resolve => {
-        image.addEventListener('load', () => resolve(), { once: true });
-        image.addEventListener('error', () => resolve(), { once: true });
-      });
-    }));
-
-    window.print();
-  };
+  const handlePrint = (selector: string) => printTarget(selector);
 
   // ===================== EXPENSES HANDLERS =====================
   const handleAddExpense = (expense: Omit<Expense, 'id'>) => {
@@ -381,7 +365,6 @@ export default function App() {
           activeTab={activeTab}
           settings={appState.settings}
           currentUser={appState.currentUser}
-          onPrintPage={handlePrint}
         />
 
         <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto">

@@ -8,6 +8,7 @@ import { ActionMenu } from '../components/ActionMenu';
 import { ExecutedProjectPrintReport } from '../components/ExecutedProjectPrintReport';
 import { ProjectPrintTemplate } from '../components/ProjectPrintTemplate';
 import { ReportPreviewModal } from '../components/ReportPreviewModal';
+import { ExecutedProjectsRegisterPrintTemplate } from '../components/ProjectRegisterPrintTemplates';
 
 interface ExecutedProjectsPageProps {
   executedProjects: ExecutedProject[];
@@ -15,7 +16,7 @@ interface ExecutedProjectsPageProps {
   onAddExecutedProject: (project: Omit<ExecutedProject, 'id'>) => void;
   onUpdateExecutedProject: (project: ExecutedProject) => void;
   onDeleteExecutedProject: (id: string) => void;
-  onPrint: () => void;
+  onPrint: (selector: string) => void;
 }
 
 export const ExecutedProjectsPage: React.FC<ExecutedProjectsPageProps> = ({
@@ -292,7 +293,7 @@ export const ExecutedProjectsPage: React.FC<ExecutedProjectsPageProps> = ({
             )}
 
             <button
-              onClick={onPrint}
+              onClick={() => onPrint('.executed-projects-register-print-report')}
               className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-xs transition-colors border border-slate-300"
             >
               <Printer className="w-4 h-4" />
@@ -491,7 +492,7 @@ export const ExecutedProjectsPage: React.FC<ExecutedProjectsPageProps> = ({
                           icon: <Printer className="w-4 h-4 text-amber-600" />,
                           onClick: () => {
                             setViewingProject(p);
-                            setTimeout(() => window.print(), 100);
+                            setTimeout(() => onPrint('.project-quick-print-report'), 100);
                           }
                         },
                         {
@@ -612,7 +613,7 @@ export const ExecutedProjectsPage: React.FC<ExecutedProjectsPageProps> = ({
                 </button>
 
                 <button
-                  onClick={() => window.print()}
+                  onClick={() => onPrint('.project-quick-print-report')}
                   className="flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-amber-400 font-bold rounded-lg text-xs cursor-pointer shadow-sm transition-colors"
                 >
                   <Printer className="w-4 h-4" />
@@ -642,10 +643,23 @@ export const ExecutedProjectsPage: React.FC<ExecutedProjectsPageProps> = ({
       )}
 
       {/* Dedicated Single Executed Project Professional Printable Report Document */}
+      <ExecutedProjectsRegisterPrintTemplate
+        projects={filteredProjects}
+        settings={settings}
+        filters={[
+          ...(searchTerm.trim() ? [{ label: 'البحث', value: searchTerm.trim() }] : []),
+          ...(selectedType !== 'ALL' ? [{ label: 'نوع المشروع', value: selectedType }] : []),
+          ...(startDate ? [{ label: 'من تاريخ', value: startDate }] : []),
+          ...(endDate ? [{ label: 'إلى تاريخ', value: endDate }] : []),
+          ...(minPrice !== '' ? [{ label: 'الحد الأدنى للقيمة', value: String(minPrice) }] : []),
+          ...(maxPrice !== '' ? [{ label: 'الحد الأعلى للقيمة', value: String(maxPrice) }] : []),
+        ]}
+      />
       {viewingProject && (
         <ProjectPrintTemplate
           project={viewingProject}
           settings={settings}
+          printClassName="project-quick-print-report"
         />
       )}
 

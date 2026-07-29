@@ -3,6 +3,7 @@ import { Project, ExecutedProject, OfficeSettings } from '../types';
 import { Modal } from './Modal';
 import { ProjectPrintTemplate } from './ProjectPrintTemplate';
 import { Printer, Eye, Settings2, RotateCcw, CheckSquare, Square, FileText, Type } from 'lucide-react';
+import { printTarget } from '../utils/printUtils';
 
 interface ReportPreviewModalProps {
   isOpen: boolean;
@@ -63,13 +64,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
     setShowSignatures(true);
   };
 
-  const handlePrint = async () => {
-    if (document.fonts?.ready) {
-      await document.fonts.ready;
-    }
-
-    window.print();
-  };
+  const handlePrint = () => printTarget('.project-preview-print-report');
 
   return (
     <Modal
@@ -302,6 +297,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
           showSignatures={showSignatures}
           showHeader={showHeader}
           forScreenPreview={false}
+          printClassName="project-preview-print-report"
         />
       </div>
     </Modal>

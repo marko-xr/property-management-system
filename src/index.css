@@ -82,6 +82,10 @@
     display: block !important;
   }
 
+  body.print-isolating > .print-report:not(.print-target-active) {
+    display: none !important;
+  }
+
   .print-report .print-letterhead {
     display: grid !important;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;

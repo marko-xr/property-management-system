@@ -16,7 +16,7 @@ interface ContractsPageProps {
   onAddContract: (contract: Omit<Contract, 'id'>) => void;
   onUpdateContract: (contract: Contract) => void;
   onDeleteContract: (id: string) => void;
-  onPrint: () => void;
+  onPrint: (selector: string) => void;
 }
 
 export const ContractsPage: React.FC<ContractsPageProps> = ({
@@ -600,7 +600,7 @@ export const ContractsPage: React.FC<ContractsPageProps> = ({
 
         <div className="flex items-center gap-2">
           <button
-            onClick={onPrint}
+            onClick={() => onPrint('.contract-print-wrapper')}
             className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-colors border border-slate-300"
           >
             <Printer className="w-4 h-4" />
@@ -1301,7 +1301,7 @@ export const ContractsPage: React.FC<ContractsPageProps> = ({
 
             <div className="flex items-center justify-between no-print pt-2">
               <button
-                onClick={() => window.print()}
+                onClick={() => onPrint('.contract-detail-print-report')}
                 className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-amber-400 font-bold rounded-lg text-xs cursor-pointer hover:bg-slate-800 transition-colors"
               >
                 <Printer className="w-4 h-4" />
@@ -1320,7 +1320,7 @@ export const ContractsPage: React.FC<ContractsPageProps> = ({
 
       {/* Dedicated Printable A4 Document for Contract Details & Payment Schedule */}
       {viewingContract && (
-        <div className="contract-print-wrapper hidden print:block text-right dir-rtl font-sans bg-white text-slate-900 p-6 leading-normal text-xs">
+        <div className="contract-print-wrapper contract-detail-print-report hidden print:block text-right dir-rtl font-sans bg-white text-slate-900 p-6 leading-normal text-xs">
           {/* Top Banner */}
           <div className="mb-3">
             <EmaratekLogo className="w-full h-14 border-2 border-slate-900 rounded-lg" />

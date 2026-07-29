@@ -4,6 +4,7 @@ import { EmployeeDebt, EmployeeDebtRepayment, OfficeSettings, PaymentMethod } fr
 import { Modal } from '../components/Modal';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { EmployeeDebtPrintTemplate } from '../components/EmployeeDebtPrintTemplate';
+import { ProfessionalPrintReport } from '../components/ProfessionalPrintReport';
 import { ActionMenu, ActionMenuItem } from '../components/ActionMenu';
 import { formatCreationDateTime, formatCompletionDateTime } from '../utils/dateUtils';
 
@@ -14,7 +15,7 @@ interface EmployeeDebtsPageProps {
   onUpdateDebt: (debt: EmployeeDebt) => void;
   onDeleteDebt: (id: string) => void;
   onAddRepayment: (debtId: string, repayment: Omit<EmployeeDebtRepayment, 'id' | 'debtId'>) => void;
-  onPrint: () => void;
+  onPrint: (selector: string) => void;
 }
 
 export const EmployeeDebtsPage: React.FC<EmployeeDebtsPageProps> = ({
@@ -221,7 +222,7 @@ export const EmployeeDebtsPage: React.FC<EmployeeDebtsPageProps> = ({
 
         <div className="flex items-center gap-2">
           <button
-            onClick={onPrint}
+            onClick={() => onPrint('.employee-debt-print-wrapper')}
             className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-colors border border-slate-300"
           >
             <Printer className="w-4 h-4" />
@@ -537,7 +538,7 @@ export const EmployeeDebtsPage: React.FC<EmployeeDebtsPageProps> = ({
 
             <div className="flex items-center justify-between no-print pt-2">
               <button
-                onClick={() => window.print()}
+                onClick={() => onPrint('.employee-debt-statement-print-report')}
                 className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-amber-400 font-bold rounded-lg text-xs"
               >
                 <Printer className="w-4 h-4" />
@@ -750,6 +751,36 @@ export const EmployeeDebtsPage: React.FC<EmployeeDebtsPageProps> = ({
         totalRepaidAmount={totalPaidSum}
         totalRemainingBalance={totalRemainingSum}
       />
+      {viewingDebt && (
+        <ProfessionalPrintReport<EmployeeDebtRepayment>
+          wrapperClass="employee-debt-statement-print-report"
+          settings={settings}
+          title="كشف حساب مديونية موظف"
+          subtitle={`كشف حساب الموظف: ${viewingDebt.employeeName}`}
+          reportPrefix="DEBT"
+          filters={[
+            { label: 'الموظف', value: viewingDebt.employeeName },
+            { label: 'رقم الهاتف', value: viewingDebt.phone },
+            { label: 'سبب المديونية', value: viewingDebt.reason },
+            { label: 'تاريخ المديونية', value: viewingDebt.date },
+          ]}
+          sectionTitle="أولاً: سجل السدادات"
+          columns={[
+            { key: 'index', label: '#', width: '7%', render: (_, index) => index + 1 },
+            { key: 'date', label: 'التاريخ', width: '20%', render: repayment => repayment.date },
+            { key: 'amount', label: 'المبلغ', width: '23%', render: repayment => `${repayment.amount.toLocaleString('ar-AE')} درهم` },
+            { key: 'method', label: 'طريقة الدفع', width: '20%', render: repayment => repayment.paymentMethod },
+            { key: 'notes', label: 'ملاحظات', width: '30%', render: repayment => repayment.notes },
+          ]}
+          records={viewingDebt.repayments || []}
+          getRowKey={repayment => repayment.id}
+          summary={[
+            { label: 'إجمالي المديونية', value: `${viewingDebt.totalAmount.toLocaleString('ar-AE')} درهم` },
+            { label: 'إجمالي المسدد', value: `${(viewingDebt.repayments || []).reduce((sum, repayment) => sum + repayment.amount, 0).toLocaleString('ar-AE')} درهم` },
+            { label: 'الرصيد المتبقي', value: `${Math.max(0, viewingDebt.totalAmount - (viewingDebt.repayments || []).reduce((sum, repayment) => sum + repayment.amount, 0)).toLocaleString('ar-AE')} درهم` },
+          ]}
+        />
+      )}
     </div>
   );
 };

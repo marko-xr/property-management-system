@@ -4,6 +4,7 @@ import { Contract, ContractInstallment, OfficeSettings } from '../types';
 import { Modal } from './Modal';
 import { PrintHeader } from './PrintHeader';
 import { EmaratekLogo } from './EmaratekLogo';
+import { printTarget } from '../utils/printUtils';
 
 interface UnitStatementModalProps {
   isOpen: boolean;
@@ -78,9 +79,7 @@ export const UnitStatementModal: React.FC<UnitStatementModalProps> = ({
   // Get available units for dropdown if building is selected
   const availableUnitsForBuilding = allUnitsList.filter(u => u.buildingName === selectedBuilding);
 
-  const handlePrint = () => {
-    window.print();
-  };
+  const handlePrint = () => printTarget('.unit-print-wrapper');
 
   return (
     <>

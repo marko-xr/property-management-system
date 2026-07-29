@@ -17,6 +17,7 @@ export interface ProjectPrintTemplateProps {
   showSignatures?: boolean;
   showHeader?: boolean;
   forScreenPreview?: boolean;
+  printClassName?: string;
 }
 
 export const ProjectPrintTemplate: React.FC<ProjectPrintTemplateProps> = ({
@@ -32,6 +33,7 @@ export const ProjectPrintTemplate: React.FC<ProjectPrintTemplateProps> = ({
   showSignatures = true,
   showHeader = true,
   forScreenPreview = false,
+  printClassName = '',
 }) => {
   // Determine project type (ExecutedProject has 'costItems', Project has 'items')
   const isExecuted = 'costItems' in project;
@@ -104,7 +106,7 @@ export const ProjectPrintTemplate: React.FC<ProjectPrintTemplateProps> = ({
 
   const wrapperClass = forScreenPreview
     ? 'bg-white text-slate-900 p-6 shadow-md rounded-lg border border-slate-300 w-full text-xs text-right dir-rtl font-sans my-2'
-    : 'project-print-wrapper print-report hidden print:block text-right dir-rtl font-sans bg-white text-slate-900 leading-normal text-xs';
+    : `project-print-wrapper ${printClassName} print-report hidden print:block text-right dir-rtl font-sans bg-white text-slate-900 leading-normal text-xs`;
 
   const report = (
     <div className={wrapperClass}>
