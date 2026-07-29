@@ -2,8 +2,8 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import { Expense, OfficeSettings } from '../types';
 import { formatArabicMonthYear } from '../utils/dateUtils';
-import companyLogo from '../../logo.jpeg';
 import { CompactPrintTable } from './ProfessionalPrintReport';
+import { PrintLetterhead } from './PrintLetterhead';
 
 interface ExpensePrintTemplateProps {
   filteredExpenses: Expense[];
@@ -67,26 +67,8 @@ export const ExpensePrintTemplate: React.FC<ExpensePrintTemplateProps> = ({
       : 'كشف سجل المصروفات';
 
   const report = (
-    <div className="expense-print-wrapper expense-print-report professional-print-report print-report" dir="rtl">
-      <header className="print-letterhead">
-        <div className="print-letterhead-en" dir="ltr">
-          <div className="print-letterhead-name">EMARATEK REAL ESTATE</div>
-          <div className="print-letterhead-location">
-            Ajman - Al Jurf - McDonald's Roundabout
-          </div>
-        </div>
-
-        <div className="print-letterhead-logo">
-          <img src={companyLogo} alt="شعار إماراتك العقارية" />
-        </div>
-
-        <div className="print-letterhead-ar" dir="rtl">
-          <div className="print-letterhead-name">إماراتك العقارية</div>
-          <div className="print-letterhead-location">
-            {settings.address || 'عجمان - الجرف - دوار ماكدونالدز'}
-          </div>
-        </div>
-      </header>
+    <div className="expense-print-wrapper expense-print-report professional-print-report print-landscape print-report" dir="rtl">
+      <PrintLetterhead settings={settings} />
 
       <section className="report-title-section">
         <div className="report-title-content">
@@ -153,15 +135,15 @@ export const ExpensePrintTemplate: React.FC<ExpensePrintTemplateProps> = ({
             records={filteredExpenses}
             getRowKey={expense => expense.id}
             columns={[
-              { key: 'index', label: '#', width: '4%', render: (_, index) => index + 1 },
-              { key: 'date', label: 'التاريخ', width: '10%', render: expense => expense.date },
-              { key: 'category', label: 'نوع المصروف', width: '12%', render: expense => expense.category },
-              { key: 'details', label: 'البيان / الوصف', width: '22%', render: expense => expense.details },
-              { key: 'payment', label: 'طريقة الدفع', width: '10%', render: expense => expense.paymentMethod },
-              { key: 'responsible', label: 'المستفيد / المسؤول', width: '14%', render: expense => expense.responsible },
-              { key: 'reference', label: 'رقم المرجع', width: '10%', render: expense => expense.reference },
-              { key: 'amount', label: 'المبلغ', width: '10%', render: expense => <span dir="ltr">{expense.amount.toLocaleString('ar-AE')} درهم</span> },
-              { key: 'notes', label: 'الملاحظات', width: '8%', render: expense => expense.notes },
+              { key: 'index', label: '#', width: '3%', className: 'print-col-index', render: (_, index) => index + 1 },
+              { key: 'date', label: 'التاريخ', width: '9%', className: 'print-col-date', render: expense => expense.date },
+              { key: 'category', label: 'نوع المصروف', width: '11%', render: expense => expense.category },
+              { key: 'details', label: 'البيان / الوصف', width: '22%', className: 'print-col-long-text', render: expense => expense.details },
+              { key: 'payment', label: 'طريقة الدفع', width: '9%', render: expense => expense.paymentMethod },
+              { key: 'responsible', label: 'المستفيد / المسؤول', width: '13%', className: 'print-col-medium-text', render: expense => expense.responsible },
+              { key: 'reference', label: 'رقم المرجع', width: '9%', className: 'print-col-reference', render: expense => expense.reference },
+              { key: 'amount', label: 'المبلغ', width: '9%', className: 'print-col-amount', render: expense => <span dir="ltr">{expense.amount.toLocaleString('ar-AE')} درهم</span> },
+              { key: 'notes', label: 'الملاحظات', width: '15%', className: 'print-col-long-text', render: expense => expense.notes },
             ]}
           />
         )}

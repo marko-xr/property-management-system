@@ -6,6 +6,7 @@ import { ConfirmDialog } from '../components/ConfirmDialog';
 import { ExpensePrintTemplate } from '../components/ExpensePrintTemplate';
 import { ActionMenu } from '../components/ActionMenu';
 import { formatCreationDateTime, formatCompletionDateTime, formatArabicMonthYear } from '../utils/dateUtils';
+import { PrintOrientation } from '../utils/printUtils';
 
 interface ExpensesPageProps {
   expenses: Expense[];
@@ -13,7 +14,7 @@ interface ExpensesPageProps {
   onAddExpense: (expense: Omit<Expense, 'id'>) => void;
   onUpdateExpense: (expense: Expense) => void;
   onDeleteExpense: (id: string) => void;
-  onPrint: (selector: string) => void;
+  onPrint: (selector: string, orientation?: PrintOrientation) => void;
 }
 
 export const ExpensesPage: React.FC<ExpensesPageProps> = ({
@@ -193,7 +194,7 @@ export const ExpensesPage: React.FC<ExpensesPageProps> = ({
       await document.fonts.ready;
     }
 
-    onPrint('.expense-print-report');
+    onPrint('.expense-print-report', 'landscape');
   };
 
   return (

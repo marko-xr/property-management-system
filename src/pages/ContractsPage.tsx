@@ -4,7 +4,7 @@ import { Contract, ContractInstallment, OfficeSettings } from '../types';
 import { Modal } from '../components/Modal';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { PrintHeader } from '../components/PrintHeader';
-import { EmaratekLogo } from '../components/EmaratekLogo';
+import { PrintLetterhead } from '../components/PrintLetterhead';
 import { ActionMenu, ActionMenuItem } from '../components/ActionMenu';
 import { UnitStatementModal } from '../components/UnitStatementModal';
 import { ContractRegisterPrintTemplate } from '../components/ContractRegisterPrintTemplate';
@@ -880,11 +880,6 @@ export const ContractsPage: React.FC<ContractsPageProps> = ({
                                 label: 'عرض العقد والدفعات',
                                 icon: <Eye className="w-4 h-4 text-emerald-600" />,
                                 onClick: () => setViewingContract(c)
-                              },
-                              {
-                                label: 'طباعة كشف الشقة / الوحدة',
-                                icon: <Printer className="w-4 h-4 text-amber-600" />,
-                                onClick: () => setUnitStatementTarget({ buildingName: c.buildingName, unitNumber: c.unitNumber })
                               }
                             ];
 
@@ -1322,23 +1317,7 @@ export const ContractsPage: React.FC<ContractsPageProps> = ({
       {viewingContract && (
         <div className="contract-print-wrapper contract-detail-print-report hidden print:block text-right dir-rtl font-sans bg-white text-slate-900 p-6 leading-normal text-xs">
           {/* Top Banner */}
-          <div className="mb-3">
-            <EmaratekLogo className="w-full h-14 border-2 border-slate-900 rounded-lg" />
-          </div>
-
-          {/* Sub Header Information */}
-          <div className="flex items-center justify-between text-[11px] font-semibold text-slate-700 pb-2 mb-4 border-b border-slate-300">
-            <div>
-              <span>العنوان: {settings.address || 'عجمان - الجرف - دوار ماكدونالدز'}</span>
-              <span className="mx-2">|</span>
-              <span>البريد: {settings.email || 'emaratekrealestate@gmail.com'}</span>
-              <span className="mx-2">|</span>
-              <span>الهاتف: {settings.phone || '0000 740 6 971+'}</span>
-            </div>
-            <div>
-              <span>تاريخ الطباعة: {new Date().toLocaleDateString('ar-AE', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-            </div>
-          </div>
+          <PrintLetterhead settings={settings} />
 
           {/* Document Title Box */}
           <div className="mb-5 p-3 bg-slate-100 rounded-lg border border-slate-300 text-center">
@@ -1376,63 +1355,39 @@ export const ContractsPage: React.FC<ContractsPageProps> = ({
               بيانات العقد والأطراف المتعاقدة:
             </h3>
             <div className="border border-slate-300 rounded-lg overflow-hidden bg-white text-xs">
-              <table className="w-full text-right border-collapse">
+              <table className="contract-info-print-table w-full text-right border-collapse">
                 <tbody>
-                  <tr className="border-b border-slate-200 bg-slate-50">
-                    <td className="p-2.5 font-bold text-slate-900 w-1/4 border-l border-slate-200">
-                      اسم المستأجر الرسمي:
-                    </td>
-                    <td className="p-2.5 font-bold text-slate-900 w-1/4 border-l border-slate-200">
-                      {viewingContract.tenantName}
-                    </td>
-                    <td className="p-2.5 font-bold text-slate-900 w-1/4 border-l border-slate-200">
-                      رقم هاتف المستأجر:
-                    </td>
-                    <td className="p-2.5 font-mono font-bold text-slate-900 w-1/4">
-                      {viewingContract.tenantPhone || '-'}
-                    </td>
-                  </tr>
-                  <tr className="border-b border-slate-200">
-                    <td className="p-2.5 font-bold text-slate-900 border-l border-slate-200">
-                      اسم المالك والعقار:
-                    </td>
-                    <td className="p-2.5 text-slate-800 border-l border-slate-200">
-                      {viewingContract.ownerName} ({viewingContract.buildingName})
-                    </td>
-                    <td className="p-2.5 font-bold text-slate-900 border-l border-slate-200">
-                      رقم الشقة / المنطقة:
-                    </td>
-                    <td className="p-2.5 text-slate-900 font-bold">
-                      شقة {viewingContract.unitNumber} - {viewingContract.area}
-                    </td>
-                  </tr>
-                  <tr className="bg-slate-50 border-b border-slate-200">
-                    <td className="p-2.5 font-bold text-slate-900 border-l border-slate-200">
-                      فترة العقد المبرمة:
-                    </td>
-                    <td className="p-2.5 font-mono text-slate-900 border-l border-slate-200">
-                      من {viewingContract.startDate} إلى {viewingContract.endDate}
-                    </td>
-                    <td className="p-2.5 font-bold text-slate-900 border-l border-slate-200">
-                      الإيجار السنوي المتفق عليه:
-                    </td>
-                    <td className="p-2.5 font-mono font-bold text-slate-900">
-                      {viewingContract.annualRent.toLocaleString('ar-AE')} درهم
-                    </td>
+                  <tr>
+                    <th>اسم المستأجر الرسمي:</th>
+                    <td>{viewingContract.tenantName || '—'}</td>
                   </tr>
                   <tr>
-                    <td className="p-2.5 font-bold text-slate-900 border-l border-slate-200">
-                      مبلغ تأمين العقد:
-                    </td>
-                    <td className="p-2.5 font-mono text-slate-900 border-l border-slate-200">
-                      {viewingContract.securityDeposit.toLocaleString('ar-AE')} درهم
-                    </td>
-                    <td className="p-2.5 font-bold text-slate-900 border-l border-slate-200">
-                      طريقة السداد وعدد الأقساط:
-                    </td>
-                    <td className="p-2.5 text-slate-900">
-                      {viewingContract.paymentType} ({viewingContract.installmentsCount} أقساط)
-                    </td>
+                    <th>رقم هاتف المستأجر:</th>
+                    <td dir="ltr">{viewingContract.tenantPhone || '—'}</td>
+                  </tr>
+                  <tr>
+                    <th>اسم المالك والعقار:</th>
+                    <td>{viewingContract.ownerName} ({viewingContract.buildingName})</td>
+                  </tr>
+                  <tr>
+                    <th>رقم الشقة / المنطقة:</th>
+                    <td>شقة {viewingContract.unitNumber} - {viewingContract.area}</td>
+                  </tr>
+                  <tr>
+                    <th>فترة العقد المبرمة:</th>
+                    <td>من {viewingContract.startDate} إلى {viewingContract.endDate}</td>
+                  </tr>
+                  <tr>
+                    <th>الإيجار السنوي المتفق عليه:</th>
+                    <td>{viewingContract.annualRent.toLocaleString('ar-AE')} درهم</td>
+                  </tr>
+                  <tr>
+                    <th>مبلغ تأمين العقد:</th>
+                    <td>{viewingContract.securityDeposit.toLocaleString('ar-AE')} درهم</td>
+                  </tr>
+                  <tr>
+                    <th>طريقة السداد وعدد الأقساط:</th>
+                    <td>{viewingContract.paymentType} ({viewingContract.installmentsCount} أقساط)</td>
                   </tr>
                 </tbody>
               </table>
@@ -1502,28 +1457,6 @@ export const ContractsPage: React.FC<ContractsPageProps> = ({
             </div>
           </div>
 
-          {/* Signatures */}
-          <div className="signature-section mt-8 pt-4 border-t border-slate-300 text-xs print-section">
-            <div className="grid grid-cols-3 gap-4 text-center font-bold text-slate-900 pt-4">
-              <div>
-                <p className="mb-8">توقيع المستأجر</p>
-                <p className="text-slate-400 font-normal">.......................</p>
-              </div>
-              <div>
-                <p className="mb-8">قسم إدارة الأملاك</p>
-                <p className="text-slate-400 font-normal">.......................</p>
-              </div>
-              <div>
-                <p className="mb-8">ختم وتوقيع إماراتك العقارية</p>
-                <p className="text-slate-400 font-normal">.......................</p>
-              </div>
-            </div>
-
-            <div className="mt-8 pt-3 border-t border-slate-200 flex items-center justify-between text-[10px] text-slate-600 font-mono">
-              <span>{settings.officeName || 'إماراتك العقارية'} - تفاصيل وقسط العقد رقم {viewingContract.id}</span>
-              <span>تاريخ الطباعة: {new Date().toLocaleDateString('ar-AE')}</span>
-            </div>
-          </div>
         </div>
       )}
 

@@ -15,7 +15,7 @@ import { ProjectsPage } from './pages/ProjectsPage';
 import { ExecutedProjectsPage } from './pages/ExecutedProjectsPage';
 import { ObligationsPage } from './pages/ObligationsPage';
 import { SettingsPage } from './pages/SettingsPage';
-import { printTarget } from './utils/printUtils';
+import { printTarget, PrintOrientation } from './utils/printUtils';
 
 export default function App() {
   const [appState, setAppState] = useState<AppState>(() => loadAppState());
@@ -62,7 +62,8 @@ export default function App() {
   };
 
   // Printing helper
-  const handlePrint = (selector: string) => printTarget(selector);
+  const handlePrint = (selector: string, orientation?: PrintOrientation) =>
+    printTarget(selector, orientation);
 
   // ===================== EXPENSES HANDLERS =====================
   const handleAddExpense = (expense: Omit<Expense, 'id'>) => {

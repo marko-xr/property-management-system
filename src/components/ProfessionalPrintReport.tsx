@@ -1,7 +1,7 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 import { OfficeSettings } from '../types';
-import companyLogo from '../../logo.jpeg';
+import { PrintLetterhead } from './PrintLetterhead';
 
 export interface PrintDetailRow {
   label: string;
@@ -12,6 +12,7 @@ export interface PrintColumn<T> {
   key: string;
   label: string;
   width?: string;
+  className?: string;
   render: (record: T, index: number) => React.ReactNode;
 }
 
@@ -28,12 +29,12 @@ export function CompactPrintTable<T>({ columns, records, getRowKey }: CompactPri
         {columns.map(column => <col key={column.key} style={{ width: column.width }} />)}
       </colgroup>
       <thead>
-        <tr>{columns.map(column => <th key={column.key}>{column.label}</th>)}</tr>
+        <tr>{columns.map(column => <th key={column.key} className={column.className}>{column.label}</th>)}</tr>
       </thead>
       <tbody>
         {records.map((record, index) => (
           <tr key={getRowKey(record)}>
-            {columns.map(column => <td key={column.key}>{displayValue(column.render(record, index))}</td>)}
+            {columns.map(column => <td key={column.key} className={column.className}>{displayValue(column.render(record, index))}</td>)}
           </tr>
         ))}
       </tbody>
@@ -85,21 +86,7 @@ export function ProfessionalPrintReport<T>({
 
   const report = (
     <div className={`${wrapperClass} professional-print-report print-report`} dir="rtl">
-      <header className="print-letterhead">
-        <div className="print-letterhead-en" dir="ltr">
-          <div className="print-letterhead-name">EMARATEK REAL ESTATE</div>
-          <div className="print-letterhead-location">Ajman - Al Jurf - McDonald's Roundabout</div>
-        </div>
-        <div className="print-letterhead-logo">
-          <img src={companyLogo} alt="شعار إماراتك العقارية" />
-        </div>
-        <div className="print-letterhead-ar" dir="rtl">
-          <div className="print-letterhead-name">إماراتك العقارية</div>
-          <div className="print-letterhead-location">
-            {settings.address || 'عجمان - الجرف - دوار ماكدونالدز'}
-          </div>
-        </div>
-      </header>
+      <PrintLetterhead settings={settings} />
 
       <section className="report-title-section">
         <div className="report-title-content">

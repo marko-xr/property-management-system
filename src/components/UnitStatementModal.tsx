@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { Printer, Building, User, Calendar, CheckCircle2, Clock, DollarSign, FileText, AlertCircle, Home, X, RefreshCw } from 'lucide-react';
 import { Contract, ContractInstallment, OfficeSettings } from '../types';
 import { Modal } from './Modal';
-import { PrintHeader } from './PrintHeader';
-import { EmaratekLogo } from './EmaratekLogo';
+import { PrintLetterhead } from './PrintLetterhead';
 import { printTarget } from '../utils/printUtils';
 
 interface UnitStatementModalProps {
@@ -348,23 +347,7 @@ export const UnitStatementModal: React.FC<UnitStatementModalProps> = ({
       {/* Dedicated Professional Printable A4 Document for Unit Statement */}
       <div className="unit-print-wrapper hidden print:block text-right dir-rtl font-sans bg-white text-slate-900 p-6 leading-normal text-xs">
         {/* 1. Official Top Company Banner */}
-        <div className="mb-3">
-          <EmaratekLogo className="w-full h-14 border-2 border-slate-900 rounded-lg" />
-        </div>
-
-        {/* Sub Header Information Row */}
-        <div className="flex items-center justify-between text-[11px] font-semibold text-slate-700 pb-2 mb-4 border-b border-slate-300">
-          <div>
-            <span>العنوان: {settings.address || 'عجمان - الجرف - دوار ماكدونالدز'}</span>
-            <span className="mx-2">|</span>
-            <span>البريد: {settings.email || 'emaratekrealestate@gmail.com'}</span>
-            <span className="mx-2">|</span>
-            <span>الهاتف: {settings.phone || '0000 740 6 971+'}</span>
-          </div>
-          <div>
-            <span>تاريخ الطباعة: {new Date().toLocaleDateString('ar-AE', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-          </div>
-        </div>
+        <PrintLetterhead settings={settings} />
 
         {/* 2. Document Title Box */}
         <div className="mb-5 p-3 bg-slate-100 rounded-lg border border-slate-300 text-center">
@@ -394,62 +377,6 @@ export const UnitStatementModal: React.FC<UnitStatementModalProps> = ({
                 {isOccupied ? 'مؤجرة (عقد نشط وساري)' : isExpired ? 'عقد منتهي' : 'فارغة / شغارة'}
               </strong>
             </span>
-          </div>
-        </div>
-
-        {/* 3. Basic Unit Details Table */}
-        <div className="mb-5 print-section">
-          <h3 className="font-bold text-xs text-slate-900 mb-2 flex items-center gap-2">
-            <span className="w-1.5 h-4 bg-slate-900 inline-block rounded-xs"></span>
-            بيانات الوحدة العقارية الأساسية:
-          </h3>
-          <div className="border border-slate-300 rounded-lg overflow-hidden bg-white text-xs">
-            <table className="w-full text-right border-collapse">
-              <tbody>
-                <tr className="border-b border-slate-200 bg-slate-50">
-                  <td className="p-2.5 font-bold text-slate-900 w-1/4 border-l border-slate-200">
-                    اسم البناية / المجمع:
-                  </td>
-                  <td className="p-2.5 font-bold text-slate-900 w-1/4 border-l border-slate-200">
-                    {selectedBuilding}
-                  </td>
-                  <td className="p-2.5 font-bold text-slate-900 w-1/4 border-l border-slate-200">
-                    رقم الشقة / الوحدة:
-                  </td>
-                  <td className="p-2.5 font-bold text-slate-900 w-1/4 font-mono">
-                    {selectedUnit}
-                  </td>
-                </tr>
-                <tr className="border-b border-slate-200">
-                  <td className="p-2.5 font-bold text-slate-900 border-l border-slate-200">
-                    نوع الاستخدام:
-                  </td>
-                  <td className="p-2.5 text-slate-800 border-l border-slate-200">
-                    {unitType}
-                  </td>
-                  <td className="p-2.5 font-bold text-slate-900 border-l border-slate-200">
-                    حالة الإشغال الحالية:
-                  </td>
-                  <td className="p-2.5 text-slate-900 font-bold">
-                    {isOccupied ? 'مؤجرة (عقد ساري)' : isExpired ? 'عقد منتهي' : 'فارغة (جاهزة للتأجير)'}
-                  </td>
-                </tr>
-                <tr className="bg-slate-50">
-                  <td className="p-2.5 font-bold text-slate-900 border-l border-slate-200">
-                    مالك العقار الرئيسي:
-                  </td>
-                  <td className="p-2.5 text-slate-800 border-l border-slate-200">
-                    {activeContract?.ownerName || latestContract?.ownerName || '-'}
-                  </td>
-                  <td className="p-2.5 font-bold text-slate-900 border-l border-slate-200">
-                    عدد العقود المسجلة:
-                  </td>
-                  <td className="p-2.5 text-slate-900 font-mono font-bold">
-                    {sortedContracts.length} عقود
-                  </td>
-                </tr>
-              </tbody>
-            </table>
           </div>
         </div>
 
@@ -639,35 +566,6 @@ export const UnitStatementModal: React.FC<UnitStatementModalProps> = ({
           </div>
         </div>
 
-        {/* 8. Official Signatures Section */}
-        <div className="signature-section mt-8 pt-4 border-t border-slate-300 text-xs print-section">
-          <div className="mb-6">
-            <p className="font-bold text-slate-900 mb-1">ملاحظات واعتماد قسم إدارة الأملاك:</p>
-            <div className="border-b border-dotted border-slate-300 h-6"></div>
-            <div className="border-b border-dotted border-slate-300 h-6"></div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-4 text-center font-bold text-slate-900 pt-4 border-t border-slate-200">
-            <div>
-              <p className="mb-8">إعداد وتدقيق</p>
-              <p className="text-slate-400 font-normal">.......................</p>
-            </div>
-            <div>
-              <p className="mb-8">قسم إدارة الأملاك</p>
-              <p className="text-slate-400 font-normal">.......................</p>
-            </div>
-            <div>
-              <p className="mb-8">ختم وتوقيع إماراتك العقارية</p>
-              <p className="text-slate-400 font-normal">.......................</p>
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div className="mt-8 pt-3 border-t border-slate-200 flex items-center justify-between text-[10px] text-slate-600 font-mono">
-            <span>{settings.officeName || 'إماراتك العقارية'} - كشف أداء وتفاصيل الشقة</span>
-            <span>تاريخ الطباعة: {new Date().toLocaleDateString('ar-AE')}</span>
-          </div>
-        </div>
       </div>
     </>
   );

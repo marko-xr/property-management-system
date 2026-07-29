@@ -2,7 +2,7 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import { Project, ExecutedProject, OfficeSettings } from '../types';
 import { EmaratekLogo } from './EmaratekLogo';
-import companyLogo from '../../logo.jpeg';
+import { PrintLetterhead } from './PrintLetterhead';
 
 export interface ProjectPrintTemplateProps {
   project: Project | ExecutedProject;
@@ -111,25 +111,7 @@ export const ProjectPrintTemplate: React.FC<ProjectPrintTemplateProps> = ({
   const report = (
     <div className={wrapperClass}>
       {!forScreenPreview && (
-        <header className="print-letterhead">
-          <div className="print-letterhead-en" dir="ltr">
-            <div className="print-letterhead-name">EMARATEK REAL ESTATE</div>
-            <div className="print-letterhead-location">
-              Ajman - Al Jurf - McDonald's Roundabout
-            </div>
-          </div>
-
-          <div className="print-letterhead-logo">
-            <img src={companyLogo} alt="شعار إماراتك العقارية" />
-          </div>
-
-          <div className="print-letterhead-ar" dir="rtl">
-            <div className="print-letterhead-name">إماراتك العقارية</div>
-            <div className="print-letterhead-location">
-              {settings.address || 'عجمان - الجرف - دوار ماكدونالدز'}
-            </div>
-          </div>
-        </header>
+        <PrintLetterhead settings={settings} />
       )}
 
       {/* 1. Official Top Company Banner */}

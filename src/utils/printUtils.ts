@@ -6,7 +6,12 @@ const waitForImage = (image: HTMLImageElement) => {
   });
 };
 
-export async function printTarget(selector: string) {
+export type PrintOrientation = 'portrait' | 'landscape';
+
+export async function printTarget(
+  selector: string,
+  orientation: PrintOrientation = 'portrait'
+) {
   const source = document.querySelector<HTMLElement>(selector);
   if (!source) return;
   const isDirectChild = source.parentElement === document.body;
@@ -17,7 +22,12 @@ export async function printTarget(selector: string) {
   }
 
   document.body.classList.add('print-isolating');
+  document.body.classList.add(`printing-${orientation}`);
   target.classList.add('print-target-active');
+  const pageStyle = document.createElement('style');
+  pageStyle.dataset.printOrientation = orientation;
+  pageStyle.textContent = `@media print { @page { size: A4 ${orientation}; margin: 12mm 14mm; } }`;
+  document.head.appendChild(pageStyle);
   try {
     if (document.fonts?.ready) await document.fonts.ready;
     await Promise.all(Array.from(target.querySelectorAll('img')).map(waitForImage));
@@ -26,5 +36,7 @@ export async function printTarget(selector: string) {
     target.classList.remove('print-target-active');
     if (!isDirectChild) target.remove();
     document.body.classList.remove('print-isolating');
+    document.body.classList.remove(`printing-${orientation}`);
+    pageStyle.remove();
   }
 }

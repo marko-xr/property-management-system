@@ -1,5 +1,6 @@
 import React from 'react';
 import { ExecutedProject, OfficeSettings } from '../types';
+import { PrintLetterhead } from './PrintLetterhead';
 
 interface ExecutedProjectPrintReportProps {
   project: ExecutedProject;
@@ -27,39 +28,8 @@ export const ExecutedProjectPrintReport: React.FC<ExecutedProjectPrintReportProp
   return (
     <div className="executed-project-print-wrapper text-right dir-rtl font-sans bg-white text-black p-6 font-normal leading-relaxed">
       {/* 1. Header (رأس التقرير) */}
-      <div className="border-b-2 border-slate-900 pb-4 mb-4">
-        <div className="flex items-center justify-between gap-4 mb-3">
-          {/* Right side: Office Info */}
-          <div>
-            <h2 className="font-extrabold text-sm text-slate-900">
-              {settings.officeName || 'إماراتك العقارية'}
-            </h2>
-            <p className="text-[11px] text-slate-700 mt-0.5">
-              {settings.address || 'عجمان - الإمارات العربية المتحدة'}
-            </p>
-            {settings.phone && (
-              <p className="text-[11px] text-slate-700 font-mono">
-                هاتف: {settings.phone}
-              </p>
-            )}
-          </div>
-
-          {/* Left side: Logo or B&W identifier */}
-          <div className="text-left">
-            {settings.officeLogo && settings.officeLogo.startsWith('http') ? (
-              <img
-                src={settings.officeLogo}
-                alt={settings.officeName}
-                className="h-12 w-auto object-contain grayscale"
-              />
-            ) : (
-              <div className="border border-slate-900 px-3 py-1 font-black text-xs text-slate-900">
-                {settings.officeName || 'إماراتك العقارية'}
-              </div>
-            )}
-          </div>
-        </div>
-
+      <div className="mb-4">
+        <PrintLetterhead settings={settings} />
         {/* Main Title Centered */}
         <div className="text-center mt-3 pt-2 border-t border-slate-200">
           <h1 className="text-xl font-black text-black tracking-tight mb-1">

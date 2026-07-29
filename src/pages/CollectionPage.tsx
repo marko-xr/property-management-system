@@ -5,6 +5,7 @@ import { Modal } from '../components/Modal';
 import { CollectionPrintTemplate } from '../components/CollectionPrintTemplate';
 import { ActionMenu } from '../components/ActionMenu';
 import { formatDateTime, formatCreationDateTime, formatCompletionDateTime } from '../utils/dateUtils';
+import { PrintOrientation } from '../utils/printUtils';
 
 interface CollectionPageProps {
   contracts: Contract[];
@@ -16,7 +17,7 @@ interface CollectionPageProps {
     collectedDate?: string,
     paymentMethod?: PaymentMethod
   ) => void;
-  onPrint: (selector: string) => void;
+  onPrint: (selector: string, orientation?: PrintOrientation) => void;
 }
 
 export const CollectionPage: React.FC<CollectionPageProps> = ({
@@ -216,7 +217,7 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
         </div>
 
         <button
-          onClick={() => onPrint('.collection-print-wrapper')}
+          onClick={() => onPrint('.collection-print-wrapper', 'landscape')}
           className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-colors border border-slate-300"
         >
           <Printer className="w-4 h-4" />

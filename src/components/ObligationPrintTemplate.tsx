@@ -14,7 +14,7 @@ export const ObligationPrintTemplate: React.FC<Props> = (props) => {
   ].filter((row): row is { label: string; value: string } => row !== null);
 
   return <ProfessionalPrintReport<Obligation>
-    wrapperClass="obligation-print-wrapper"
+    wrapperClass="obligation-print-wrapper obligations-print-report print-landscape"
     settings={props.settings}
     title="تقرير الالتزامات والرخص والمواعيد"
     subtitle={props.selectedStatus !== 'ALL' ? `كشف الالتزامات حسب الحالة: ${props.selectedStatus}` : 'كشف الالتزامات والرخص والمواعيد'}
@@ -22,14 +22,14 @@ export const ObligationPrintTemplate: React.FC<Props> = (props) => {
     filters={filters}
     sectionTitle="أولًا: تفاصيل الالتزامات والرخص والمواعيد"
     columns={[
-      { key: 'index', label: '#', width: '4%', render: (_, index) => index + 1 },
-      { key: 'type', label: 'عنوان / نوع الالتزام', width: '24%', render: obligation => obligation.type },
-      { key: 'issue', label: 'تاريخ الإصدار', width: '12%', render: obligation => obligation.issueDate },
-      { key: 'expiry', label: 'الاستحقاق / الانتهاء', width: '13%', render: obligation => obligation.expiryDate },
-      { key: 'responsible', label: 'المستفيد / المسؤول', width: '16%', render: obligation => obligation.responsiblePerson },
-      { key: 'amount', label: 'المبلغ', width: '12%', render: obligation => <span dir="ltr">{obligation.amount.toLocaleString('ar-AE')} درهم</span> },
+      { key: 'index', label: '#', width: '4%', className: 'print-col-index', render: (_, index) => index + 1 },
+      { key: 'type', label: 'عنوان / نوع الالتزام', width: '24%', className: 'print-col-long-text', render: obligation => obligation.type },
+      { key: 'issue', label: 'تاريخ الإصدار', width: '12%', className: 'print-col-date', render: obligation => obligation.issueDate },
+      { key: 'expiry', label: 'الاستحقاق / الانتهاء', width: '13%', className: 'print-col-date', render: obligation => obligation.expiryDate },
+      { key: 'responsible', label: 'المستفيد / المسؤول', width: '16%', className: 'print-col-medium-text', render: obligation => obligation.responsiblePerson },
+      { key: 'amount', label: 'المبلغ', width: '12%', className: 'print-col-amount', render: obligation => <span dir="ltr">{obligation.amount.toLocaleString('ar-AE')} درهم</span> },
       { key: 'status', label: 'الحالة', width: '8%', render: obligation => obligation.status },
-      { key: 'notes', label: 'الملاحظات', width: '11%', render: obligation => obligation.notes },
+      { key: 'notes', label: 'الملاحظات', width: '11%', className: 'print-col-long-text', render: obligation => obligation.notes },
     ]}
     records={props.filteredObligations}
     getRowKey={obligation => obligation.id}

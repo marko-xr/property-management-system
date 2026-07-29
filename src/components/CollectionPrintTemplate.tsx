@@ -20,7 +20,7 @@ export const CollectionPrintTemplate: React.FC<Props> = (props) => {
   ].filter((row): row is { label: string; value: string } => row !== null);
 
   return <ProfessionalPrintReport<CollectionRecord>
-    wrapperClass="collection-print-wrapper"
+    wrapperClass="collection-print-wrapper collection-print-report print-landscape"
     settings={props.settings}
     title="تقرير متابعة تحصيل الدفعات"
     subtitle={props.selectedBuilding !== 'ALL' ? `كشف تحصيل ${props.selectedBuilding}` : `كشف الدفعات والتحصيل — ${period}`}
@@ -28,17 +28,17 @@ export const CollectionPrintTemplate: React.FC<Props> = (props) => {
     filters={filters}
     sectionTitle="أولًا: تفاصيل الدفعات والتحصيل"
     columns={[
-      { key: 'index', label: '#', width: '4%', render: (_, index) => index + 1 },
-      { key: 'dueDate', label: 'تاريخ الاستحقاق', width: '10%', render: item => item.installment.dueDate },
-      { key: 'building', label: 'البناية', width: '11%', render: item => item.contract.buildingName },
-      { key: 'unit', label: 'الوحدة', width: '7%', render: item => item.contract.unitNumber },
-      { key: 'tenant', label: 'المستأجر', width: '14%', render: item => item.contract.tenantName },
-      { key: 'contract', label: 'رقم العقد', width: '9%', render: item => item.contract.id },
-      { key: 'amount', label: 'قيمة الدفعة', width: '11%', render: item => <span dir="ltr">{item.installment.amount.toLocaleString('ar-AE')} درهم</span> },
-      { key: 'method', label: 'طريقة التحصيل', width: '9%', render: item => item.installment.paymentMethod },
-      { key: 'cheque', label: 'الشيك / المرجع', width: '10%', render: item => item.installment.chequeNumber },
-      { key: 'collected', label: 'تاريخ التحصيل', width: '9%', render: item => item.installment.collectedDate },
-      { key: 'status', label: 'الحالة', width: '6%', render: item => item.installment.status === 'محصل' ? 'محصل' : item.isOverdue ? 'متأخر' : 'غير محصل' },
+      { key: 'index', label: '#', width: '3%', className: 'print-col-index', render: (_, index) => index + 1 },
+      { key: 'dueDate', label: 'تاريخ الاستحقاق', width: '10%', className: 'print-col-date', render: item => <span className="print-ltr-value" dir="ltr">{item.installment.dueDate}</span> },
+      { key: 'building', label: 'البناية', width: '13%', className: 'print-col-medium-text', render: item => item.contract.buildingName },
+      { key: 'unit', label: 'الوحدة', width: '7%', render: item => <span className="print-ltr-value" dir="ltr">{item.contract.unitNumber}</span> },
+      { key: 'tenant', label: 'المستأجر', width: '15%', className: 'print-col-medium-text', render: item => item.contract.tenantName },
+      { key: 'contract', label: 'رقم العقد', width: '11%', className: 'print-col-reference', render: item => <span className="print-ltr-value" dir="ltr">{item.contract.id || '—'}</span> },
+      { key: 'amount', label: 'قيمة الدفعة', width: '9%', className: 'print-col-amount', render: item => <span className="print-money-value" dir="rtl">{item.installment.amount.toLocaleString('ar-AE')} درهم</span> },
+      { key: 'method', label: 'طريقة التحصيل', width: '8%', render: item => item.installment.paymentMethod },
+      { key: 'cheque', label: 'الشيك / المرجع', width: '11%', className: 'print-col-reference', render: item => <span className="print-ltr-value" dir="ltr">{item.installment.chequeNumber || '—'}</span> },
+      { key: 'collected', label: 'تاريخ التحصيل', width: '8%', className: 'print-col-date', render: item => <span className="print-ltr-value" dir="ltr">{item.installment.collectedDate || '—'}</span> },
+      { key: 'status', label: 'الحالة', width: '5%', className: 'print-col-medium-text', render: item => item.installment.status === 'محصل' ? 'محصل' : item.isOverdue ? 'متأخر' : 'غير محصل' },
     ]}
     records={props.filteredInstallments}
     getRowKey={item => `${item.contract.id}-${item.installment.id}`}

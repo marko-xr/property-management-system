@@ -19,7 +19,7 @@ export const RevenuePrintTemplate: React.FC<Props> = (props) => {
   ].filter((row): row is { label: string; value: string } => row !== null);
 
   return <ProfessionalPrintReport<Revenue>
-    wrapperClass="revenue-print-wrapper"
+    wrapperClass="revenue-print-wrapper print-landscape"
     settings={props.settings}
     title="تقرير الإيرادات والعمولات"
     subtitle={props.selectedEmployee !== 'ALL' ? `كشف إيرادات وعمولات الموظف ${props.selectedEmployee}` : `كشف الإيرادات والعمولات — ${period}`}
@@ -27,14 +27,14 @@ export const RevenuePrintTemplate: React.FC<Props> = (props) => {
     filters={filters}
     sectionTitle="أولًا: تفاصيل الإيرادات والعمولات"
     columns={[
-      { key: 'index', label: '#', width: '4%', render: (_, index) => index + 1 },
-      { key: 'date', label: 'التاريخ', width: '11%', render: revenue => revenue.date },
-      { key: 'employee', label: 'الموظف / الدافع', width: '14%', render: revenue => revenue.employeeName },
-      { key: 'type', label: 'نوع الإيراد / العمولة', width: '14%', render: revenue => revenue.type },
-      { key: 'details', label: 'البيان / الوصف', width: '24%', render: revenue => revenue.details },
-      { key: 'amount', label: 'المبلغ', width: '12%', render: revenue => <span dir="ltr">{revenue.amount.toLocaleString('ar-AE')} درهم</span> },
-      { key: 'received', label: 'تاريخ الاستلام', width: '11%', render: revenue => formatCompletionDateTime(revenue.completedAt, revenue.date) },
-      { key: 'notes', label: 'الملاحظات', width: '10%', render: revenue => revenue.notes },
+      { key: 'index', label: '#', width: '3%', className: 'print-col-index', render: (_, index) => index + 1 },
+      { key: 'date', label: 'التاريخ', width: '9%', className: 'print-col-date', render: revenue => revenue.date },
+      { key: 'employee', label: 'الموظف / الدافع', width: '14%', className: 'print-col-medium-text', render: revenue => revenue.employeeName },
+      { key: 'type', label: 'نوع الإيراد / العمولة', width: '15%', className: 'print-col-medium-text', render: revenue => revenue.type },
+      { key: 'details', label: 'البيان / الوصف', width: '24%', className: 'print-col-long-text', render: revenue => revenue.details },
+      { key: 'amount', label: 'المبلغ', width: '9%', className: 'print-col-amount', render: revenue => <span dir="ltr">{revenue.amount.toLocaleString('ar-AE')} درهم</span> },
+      { key: 'received', label: 'تاريخ الاستلام', width: '11%', className: 'print-col-date', render: revenue => formatCompletionDateTime(revenue.completedAt, revenue.date) },
+      { key: 'notes', label: 'الملاحظات', width: '15%', className: 'print-col-long-text', render: revenue => revenue.notes },
     ]}
     records={props.filteredRevenues}
     getRowKey={revenue => revenue.id}
